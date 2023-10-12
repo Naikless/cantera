@@ -49,9 +49,9 @@ cdef class ReactorBase:
             self.volume = volume
 
         if node_attr is not None:
-            self._node_attr = node_attr
+            self.node_attr = node_attr
         else:
-            self._node_attr = {}
+            self.node_attr = {}
 
     def insert(self, _SolutionBase solution):
         """
@@ -75,15 +75,6 @@ cdef class ReactorBase:
 
         def __set__(self, name):
             self.rbase.setName(stringify(name))
-
-    @property
-    def node_attr(self):
-        """Atrributes like ``style`` when drawn as node by graphviz dot."""
-        return self._node_attr
-
-    @node_attr.setter
-    def node_attr(self, attr):
-        self._node_attr = attr
 
     def syncState(self):
         """
@@ -922,14 +913,6 @@ cdef class ReactorSurface:
         return draw_surface(self, dot=dot, print_state=print_state,
                             species=species, **kwargs)
 
-    def add_sensitivity_reaction(self, int m):
-        """
-        Specifies that the sensitivity of the state variables with respect to
-        reaction ``m`` should be computed. ``m`` is the 0-based reaction index.
-        The Surface must be installed on a reactor and part of a network first.
-        """
-        self.surface.addSensitivityReaction(m)
-
 
 cdef class WallBase:
     """
@@ -989,9 +972,9 @@ cdef class WallBase:
         if velocity is not None:
             self.velocity = velocity
         if edge_attr is not None:
-            self._edge_attr = edge_attr
+            self.edge_attr = edge_attr
         else:
-            self._edge_attr = {}
+            self.edge_attr = {}
 
     def _install(self, ReactorBase left, ReactorBase right):
         """
@@ -1016,15 +999,6 @@ cdef class WallBase:
             return self.wall.area()
         def __set__(self, double value):
             self.wall.setArea(value)
-
-    @property
-    def edge_attr(self):
-        """Style options when drawn as an edge by graphviz dot."""
-        return self._edge_attr
-
-    @edge_attr.setter
-    def edge_attr(self, attr):
-        self._edge_attr = attr
 
     @property
     def left_reactor(self):
@@ -1204,9 +1178,9 @@ cdef class FlowDevice:
             self.name = '{0}_{1}'.format(self.__class__.__name__, n)
 
         if edge_attr is not None:
-            self._edge_attr = edge_attr
+            self.edge_attr = edge_attr
         else:
-            self._edge_attr = {}
+            self.edge_attr = {}
 
         self._install(upstream, downstream)
 
@@ -1248,15 +1222,6 @@ cdef class FlowDevice:
         """
         def __get__(self):
             return self.dev.massFlowRate()
-
-    @property
-    def edge_attr(self):
-        """Style options when drawn as an edge by graphviz dot."""
-        return self._edge_attr
-
-    @edge_attr.setter
-    def edge_attr(self, attr):
-        self._edge_attr = attr
 
     @property
     def pressure_function(self):
